@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShoppingCart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ShoppingCart.styles.css" asp-append-version="true" />
+    <style>
+        /* Dark theme styles */
+        body.dark-theme {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+            body.dark-theme .bg-white {
+                background-color: #1e1e1e;
+            }
+
+            body.dark-theme .navbar {
+                background-color: #1e1e1e;
+            }
+
+                body.dark-theme .navbar a {
+                    color: #ffffff; /* Change link color to white for better visibility */
+                }
+
+            body.dark-theme .navbar-brand {
+                color: #ffcc00; /* Highlight the brand text in yellow for visibility */
+            }
+
+            body.dark-theme .footer {
+                background-color: #1e1e1e;
+                color: #ffffff;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ShoppingCart</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-danger" asp-controller="Account" asp-action="Logout">Hi, @User.Identity.Name, Log out</a>
+                            </li>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                            {
+                                <li class="nav-item">
+                                    <a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-success" asp-controller="Account" asp-action="Login">Log in</a>
+                            </li>
+                        }
+                    </ul>
+                    <!-- Dark Theme Toggle Button -->
+                    <button id="themeToggle" class="btn btn-secondary ms-2">&#127769; Darktheme</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="row">
+                <div class="col-3">
+                    <vc:categories />
+
+                    <div class="bg-success mt-3 p-3 text-white">
+                        <vc:small-cart />
+                    </div>
+                </div>
+                <div class="col">
+                    <partial name="_NotificationPartial" />
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - ShoppingCart - <a asp-area="" asp-controller="Home" asp-action="Privacy">Contact</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $('#themeToggle').click(function () {
+                $('body').toggleClass('dark-theme');
+            });
+        });
+    </script>
+</body>
+</html>
